@@ -1,11 +1,11 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >0.7.5;
+pragma solidity ^0.8.9;
 
 import { ERC20 } from "@openzeppelin/contracts/token/ERC20/ERC20.sol";
 import { ERC20Permit } from "@openzeppelin/contracts/token/ERC20/extensions/draft-ERC20Permit.sol";
 import { ERC20Votes } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20Votes.sol";
 import { ERC20VotesComp } from "@openzeppelin/contracts/token/ERC20/extensions/ERC20VotesComp.sol";
-import { IL2StandardERC20 } from "@eth-optimism/contracts/contracts/standards/IL2StandardERC20.sol";
+import { IL2StandardERC20 } from "./IL2StandardERC20.sol";
 
 contract L2GovernanceERC20 is IL2StandardERC20, ERC20, ERC20Permit, ERC20Votes, ERC20VotesComp {
     address public l1Token;

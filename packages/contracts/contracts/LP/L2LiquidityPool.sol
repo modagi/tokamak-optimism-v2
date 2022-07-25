@@ -1,21 +1,21 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >0.7.5;
+pragma solidity ^0.8.9;
 
 import "./interfaces/iL1LiquidityPool.sol";
 
 /* Library Imports */
-import "@eth-optimism/contracts/contracts/libraries/bridge/CrossDomainEnabled.sol";
-import "@eth-optimism/contracts/contracts/libraries/constants/Lib_PredeployAddresses.sol";
+import "../libraries/bridge/CrossDomainEnabled.sol";
+import "../libraries/constants/Lib_PredeployAddresses.sol";
 
 /* External Imports */
 import '@openzeppelin/contracts/utils/math/SafeMath.sol';
 import '@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol';
 import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.sol";
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
-import "@eth-optimism/contracts/contracts/L2/predeploys/OVM_GasPriceOracle.sol";
-import "@eth-optimism/contracts/contracts/L2/messaging/L2StandardBridge.sol";
 
 /* External Imports */
+import "../L2/predeploys/OVM_GasPriceOracle.sol";
+import "../L2/messaging/L2StandardBridge.sol";
 import "../standards/xL2GovernanceERC20.sol";
 import "../L2BillingContract.sol";
 

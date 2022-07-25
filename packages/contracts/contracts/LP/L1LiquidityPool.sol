@@ -1,5 +1,5 @@
 // SPDX-License-Identifier: MIT
-pragma solidity >0.7.5;
+pragma solidity ^0.8.9;
 pragma experimental ABIEncoderV2;
 
 import "./interfaces/iL2LiquidityPool.sol";
@@ -12,7 +12,7 @@ import "@openzeppelin/contracts-upgradeable/security/ReentrancyGuardUpgradeable.
 import "@openzeppelin/contracts-upgradeable/security/PausableUpgradeable.sol";
 
 /* External Imports */
-import "@eth-optimism/contracts/contracts/L1/messaging/L1StandardBridge.sol";
+import "../L1/messaging/L1StandardBridge.sol";
 
 /**
  * @dev An L1 LiquidityPool implementation
