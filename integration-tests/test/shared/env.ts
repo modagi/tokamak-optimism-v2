@@ -78,7 +78,7 @@ export class OptimismEnv {
       l1SignerOrProvider: l1Wallet,
       l2SignerOrProvider: l2Wallet,
       l1ChainId: await getChainId(l1Provider),
-      l2ChainId: await getChainId(l2Provider),
+      // l2ChainId: await getChainId(l2Provider),
       contracts: {
         l1: {
           AddressManager: envConfig.ADDRESS_MANAGER,

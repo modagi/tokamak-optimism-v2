@@ -36,7 +36,7 @@ import {
   getBASEDeployerAddresses,
   getBOBADeployerAddresses,
   envConfig,
-} from './utils'
+} from './utils-fast'
 
 export interface CrossDomainMessagePair {
   tx: Transaction
