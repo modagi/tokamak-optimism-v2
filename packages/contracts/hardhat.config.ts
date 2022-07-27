@@ -88,6 +88,17 @@ const config: HardhatUserConfig = {
           optimizer: { enabled: true, runs: 10_000 },
         },
       },
+      {
+        version: '0.4.11', // Required for OMGLIkeToken
+        settings: {
+          optimizer: { enabled: true, runs: 10_000 },
+          outputSelection: {
+            '*': {
+              '*': ['storageLayout'],
+            },
+          },
+        },
+      },
     ],
     settings: {
       metadata: {
