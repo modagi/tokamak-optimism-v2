@@ -6,7 +6,7 @@ pragma experimental ABIEncoderV2;
 import { IL1CrossDomainMessengerFast } from "./IL1CrossDomainMessengerFast.sol";
 
 /* Library Imports */
-import { Lib_AddressResolver } from "../../libraries/resolver/Lib_AddressResolver.sol";
+import { Lib_AddressResolver } from "./libraries/resolver/Lib_AddressResolver.sol";
 
 /**
  * @title L1MultiMessageRelayerFast
@@ -18,6 +18,7 @@ import { Lib_AddressResolver } from "../../libraries/resolver/Lib_AddressResolve
  * Runtime target: EVM
  */
 contract L1MultiMessageRelayerFast is Lib_AddressResolver {
+
     /***************
      * Structure *
      ***************/
@@ -37,7 +38,12 @@ contract L1MultiMessageRelayerFast is Lib_AddressResolver {
     /**
      * @param _libAddressManager Address of the Address Manager.
      */
-    constructor(address _libAddressManager) Lib_AddressResolver(_libAddressManager) {}
+    constructor(
+        address _libAddressManager
+    )
+        Lib_AddressResolver(_libAddressManager)
+    {}
+
 
     /**********************
      * Function Modifiers *
@@ -52,6 +58,7 @@ contract L1MultiMessageRelayerFast is Lib_AddressResolver {
         _;
     }
 
+
     /********************
      * Public Functions *
      ********************/
@@ -60,7 +67,12 @@ contract L1MultiMessageRelayerFast is Lib_AddressResolver {
      * @notice Forwards multiple cross domain messages to the L1 Cross Domain Messenger Fast for relaying
      * @param _messages An array of L2 to L1 messages
      */
-    function batchRelayMessages(L2ToL1Message[] calldata _messages) external onlyBatchRelayer {
+    function batchRelayMessages(
+        L2ToL1Message[] calldata _messages
+    )
+        external
+        onlyBatchRelayer
+    {
         IL1CrossDomainMessengerFast messenger = IL1CrossDomainMessengerFast(
             resolve("Proxy__L1CrossDomainMessengerFast")
         );
@@ -87,7 +99,10 @@ contract L1MultiMessageRelayerFast is Lib_AddressResolver {
         L2ToL1Message[] calldata _messages,
         bytes32 _standardBridgeDepositHash,
         bytes32 _lpDepositHash
-    ) external onlyBatchRelayer {
+    )
+        external
+        onlyBatchRelayer
+    {
         IL1CrossDomainMessengerFast messenger = IL1CrossDomainMessengerFast(
             resolve("Proxy__L1CrossDomainMessengerFast")
         );
