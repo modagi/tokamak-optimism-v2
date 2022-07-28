@@ -7,7 +7,7 @@ import { expectLogs } from './shared/utils-fast'
 import { getContractFactory } from '@eth-optimism/contracts'
 import L1ERC20Json from '../../packages/contracts/artifacts/contracts/test-helpers/L1ERC20.sol/L1ERC20.json'
 
-import L1LiquidityPoolJson from '../../packages/contracts/artifacts/contracts/LP/L1LiquidityPool.sol/L1LiquidityPool.json'
+import L1LiquidityPoolJson from "../../packages/contracts/artifacts/contracts/LP/L1LiquidityPool.sol/L1LiquidityPool.json"
 import a from "../../packages/contracts/artifacts/contracts/LP/L1LiquidityPool.sol/L1LiquidityPool.json";
 import L2LiquidityPoolJson from '../../packages/contracts/artifacts/contracts/LP/L2LiquidityPool.sol/L2LiquidityPool.json'
 import L2TokenPoolJson from '../../packages/contracts/artifacts/contracts/TokenPool.sol/TokenPool.json'
