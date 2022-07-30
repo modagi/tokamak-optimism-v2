@@ -7,7 +7,7 @@ import { ethers } from 'ethers'
 import '@nomiclabs/hardhat-ethers'
 import '@nomiclabs/hardhat-waffle'
 import '@nomiclabs/hardhat-etherscan'
-// import '@primitivefi/hardhat-dodoc'
+import '@primitivefi/hardhat-dodoc'
 import '@typechain/hardhat'
 import 'hardhat-deploy'
 import 'hardhat-gas-reporter'
@@ -139,27 +139,27 @@ const config: HardhatUserConfig = {
       goerli: process.env.ETHERSCAN_API_KEY,
     },
   },
-  // dodoc: {
-  //   runOnCompile: false,
-  //   exclude: [ // exclue more new contracts
-  //     'Helper_GasMeasurer',
-  //     'Helper_SimpleProxy',
-  //     'TestERC20',
-  //     'TestLib_CrossDomainUtils',
-  //     'TestLib_OVMCodec',
-  //     'TestLib_RLPReader',
-  //     'TestLib_RLPWriter',
-  //     'TestLib_AddressAliasHelper',
-  //     'TestLib_MerkleTrie',
-  //     'TestLib_SecureMerkleTrie',
-  //     'TestLib_Buffer',
-  //     'TestLib_Bytes32Utils',
-  //     'TestLib_BytesUtils',
-  //     'TestLib_MerkleTree',
-  //   ],
-  // },
+  dodoc: {
+    runOnCompile: false,
+    exclude: [ // exclue more new contracts
+      'Helper_GasMeasurer',
+      'Helper_SimpleProxy',
+      'TestERC20',
+      'TestLib_CrossDomainUtils',
+      'TestLib_OVMCodec',
+      'TestLib_RLPReader',
+      'TestLib_RLPWriter',
+      'TestLib_AddressAliasHelper',
+      'TestLib_MerkleTrie',
+      'TestLib_SecureMerkleTrie',
+      'TestLib_Buffer',
+      'TestLib_Bytes32Utils',
+      'TestLib_BytesUtils',
+      'TestLib_MerkleTree',
+    ],
+  },
   outputValidator: {
-    runOnCompile: true,
+    runOnCompile: false,
     errorMode: false,
     checks: {
       events: false,
