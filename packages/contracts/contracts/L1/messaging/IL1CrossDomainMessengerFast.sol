@@ -2,7 +2,7 @@
 pragma solidity ^0.8.9;
 
 /* Interface Imports */
-import { IL1CrossDomainMessenger } from "./L1/messaging/IL1CrossDomainMessenger.sol";
+import { IL1CrossDomainMessenger } from "./IL1CrossDomainMessenger.sol";
 
 /**
  * @title IL1CrossDomainMessengerFast

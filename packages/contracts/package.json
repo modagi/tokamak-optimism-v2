@@ -20,7 +20,7 @@
   "scripts": {
     "build": "yarn build:contracts && yarn autogen:artifacts && yarn build:typescript",
     "build:typescript": "tsc -p ./tsconfig.json",
-    "build:contracts": "hardhat compile --show-stack-traces",
+    "build:contracts": "hardhat --max-memory 4096 compile --show-stack-traces",
     "autogen:markdown": "ts-node scripts/generate-markdown.ts",
     "autogen:artifacts": "ts-node scripts/generate-artifacts.ts && ts-node scripts/generate-deployed-artifacts.ts",
     "test": "yarn test:contracts",
@@ -76,7 +76,6 @@
     "@nomiclabs/hardhat-waffle": "^2.0.1",
     "@openzeppelin/contracts": "4.3.2",
     "@openzeppelin/contracts-upgradeable": "4.3.2",
-    "@primitivefi/hardhat-dodoc": "^0.1.3",
     "@typechain/ethers-v5": "^8.0.2",
     "@typechain/hardhat": "^3.0.0",
     "@types/chai": "^4.2.18",
