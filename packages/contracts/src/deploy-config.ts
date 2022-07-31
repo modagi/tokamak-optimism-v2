@@ -5,6 +5,12 @@ import { ethers } from 'ethers'
  */
 export interface DeployConfig {
   /**
+   * Name of the network to deploy to. Must be the name of one of the networks listed in
+   * hardhat.config.ts.
+   */
+  network: string
+
+  /**
    * Whether or not this network is a forked network.
    */
   isForkedNetwork?: boolean
@@ -129,6 +135,9 @@ const configSpec: {
     default?: any
   }
 } = {
+  network: {
+    type: 'string',
+  },
   isForkedNetwork: {
     type: 'boolean',
     default: false,

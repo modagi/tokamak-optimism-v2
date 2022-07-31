@@ -1,17 +1,17 @@
 /* External Imports */
 import { ethers } from 'hardhat'
-import { Contract } from 'ethers'
+import { Contract, BigNumber } from 'ethers'
 
 import { expect } from '../../setup'
 
 const bigNumberify = (arr: any[]) => {
   return arr.map((el: any) => {
     if (typeof el === 'number') {
-      return ethers.BigNumber.from(el)
+      return BigNumber.from(el)
     } else if (typeof el === 'string' && /^\d+n$/gm.test(el)) {
-      return ethers.BigNumber.from(el.slice(0, el.length - 1))
+      return BigNumber.from(el.slice(0, el.length - 1))
     } else if (typeof el === 'string' && el.length > 2 && el.startsWith('0x')) {
-      return ethers.BigNumber.from(el.toLowerCase())
+      return BigNumber.from(el.toLowerCase())
     } else if (Array.isArray(el)) {
       return bigNumberify(el)
     } else {
@@ -34,10 +34,9 @@ export const runJsonTest = (contractName: string, json: any): void => {
             await expect(contract.functions[functionName](...test.in)).to.be
               .reverted
           } else {
-            const result = await contract.functions[functionName](...test.in)
-            expect(JSON.stringify(bigNumberify(result))).to.deep.equal(
-              JSON.stringify(bigNumberify(test.out))
-            )
+            expect(
+              bigNumberify(await contract.functions[functionName](...test.in))
+            ).to.deep.equal(bigNumberify(test.out))
           }
         })
       }

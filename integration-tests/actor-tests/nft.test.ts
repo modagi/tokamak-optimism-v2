@@ -22,11 +22,10 @@ actor('NFT claimer', () => {
 
   setupRun(async () => {
     const wallet = Wallet.createRandom().connect(env.l2Wallet.provider)
-    const tx = await env.l2Wallet.sendTransaction({
+    await env.l2Wallet.sendTransaction({
       to: wallet.address,
       value: utils.parseEther('0.01'),
     })
-    await tx.wait()
     return {
       wallet,
       contract: contract.connect(wallet),

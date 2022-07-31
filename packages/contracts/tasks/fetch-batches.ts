@@ -1,11 +1,7 @@
 import { ethers } from 'ethers'
 import { task } from 'hardhat/config'
 import * as types from 'hardhat/internal/core/params/argumentTypes'
-import {
-  BatchType,
-  SequencerBatch,
-  calldataCost,
-} from '@eth-optimism/core-utils'
+import { BatchType, SequencerBatch } from '@eth-optimism/core-utils'
 
 import { names } from '../src/address-names'
 import { getContractFromArtifact } from '../src/deploy-utils'
@@ -56,14 +52,10 @@ task('fetch-batches')
         const tx = await provider.getTransaction(event.transactionHash)
         const batch = (SequencerBatch as any).fromHex(tx.data)
 
-        // Add extra fields to the resulting json
-        // so that the serialization sizes and gas usage can be observed
+        // Add an extra field to the resulting json
+        // so that the serialization sizes can be observed
         const json = batch.toJSON()
         json.sizes = {
-          legacy: 0,
-          zlib: 0,
-        }
-        json.gasUsage = {
           legacy: 0,
           zlib: 0,
         }
@@ -71,27 +63,17 @@ task('fetch-batches')
         // Create a copy of the batch to serialize in
         // the alternative format
         const copy = (SequencerBatch as any).fromHex(tx.data)
-        let legacy: Buffer
-        let zlib: Buffer
         if (batch.type === BatchType.ZLIB) {
           copy.type = BatchType.LEGACY
-          legacy = copy.encode()
-          zlib = batch.encode()
+          json.sizes.legacy = copy.encode().length
+          json.sizes.zlib = batch.encode().length
         } else {
           copy.type = BatchType.ZLIB
-          zlib = copy.encode()
-          legacy = batch.encode()
+          json.sizes.zlib = copy.encode().length
+          json.sizes.legacy = batch.encode().length
         }
 
-        json.sizes.legacy = legacy.length
-        json.sizes.zlib = zlib.length
-
-        json.sizes.compressionRatio = json.sizes.zlib / json.sizes.legacy
-
-        json.gasUsage.legacy = calldataCost(legacy).toNumber()
-        json.gasUsage.zlib = calldataCost(zlib).toNumber()
-        json.gasUsage.compressionRatio =
-          json.gasUsage.zlib / json.gasUsage.legacy
+        json.compressionRatio = json.sizes.zlib / json.sizes.legacy
 
         batches.push(json)
       }

@@ -1,5 +1,6 @@
 /* Imports: External */
 import { BigNumber, ethers } from 'ethers'
+import { hexZeroPad } from '@ethersproject/bytes'
 
 /**
  * Removes "0x" from start of a string if it exists.
@@ -130,5 +131,5 @@ export const hexStringEquals = (stringA: string, stringB: string): boolean => {
  * @return Number cast as a hex string.
  */
 export const bytes32ify = (value: number | BigNumber): string => {
-  return ethers.utils.hexZeroPad(BigNumber.from(value).toHexString(), 32)
+  return hexZeroPad(BigNumber.from(value).toHexString(), 32)
 }

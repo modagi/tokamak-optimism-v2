@@ -1,12 +1,5 @@
 /* eslint-disable @typescript-eslint/no-unused-vars */
-import {
-  ethers,
-  Contract,
-  Overrides,
-  Signer,
-  BigNumber,
-  CallOverrides,
-} from 'ethers'
+import { ethers, Contract, Overrides, Signer, BigNumber } from 'ethers'
 import {
   TransactionRequest,
   TransactionResponse,
@@ -357,7 +350,7 @@ export class StandardBridgeAdapter implements IBridgeAdapter {
       l2Token: AddressLike,
       amount: NumberLike,
       opts?: {
-        overrides?: CallOverrides
+        overrides?: Overrides
       }
     ): Promise<BigNumber> => {
       return this.messenger.l1Provider.estimateGas(
@@ -372,7 +365,7 @@ export class StandardBridgeAdapter implements IBridgeAdapter {
       opts?: {
         recipient?: AddressLike
         l2GasLimit?: NumberLike
-        overrides?: CallOverrides
+        overrides?: Overrides
       }
     ): Promise<BigNumber> => {
       return this.messenger.l1Provider.estimateGas(
@@ -386,7 +379,7 @@ export class StandardBridgeAdapter implements IBridgeAdapter {
       amount: NumberLike,
       opts?: {
         recipient?: AddressLike
-        overrides?: CallOverrides
+        overrides?: Overrides
       }
     ): Promise<BigNumber> => {
       return this.messenger.l2Provider.estimateGas(

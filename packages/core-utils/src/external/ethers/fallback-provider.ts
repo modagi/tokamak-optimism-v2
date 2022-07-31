@@ -4,7 +4,7 @@
 
 import { ethers } from 'ethers'
 import { Provider } from '@ethersproject/providers'
-import { ConnectionInfo } from 'ethers/lib/utils'
+import { ConnectionInfo } from '@ethersproject/web'
 
 export interface HttpHeaders {
   [key: string]: string

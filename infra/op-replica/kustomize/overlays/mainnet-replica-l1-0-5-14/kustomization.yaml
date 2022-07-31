@@ -15,22 +15,18 @@ resources:
   - ../../bases/l2geth-replica
   - ../../bases/servicemonitors
   - ../../bases/replica-healthcheck
-  - ../../bases/replica-healthcheck-v1
   - ./volumes.yaml
 
 images:
   - name: ethereumoptimism/data-transport-layer
     newName: ethereumoptimism/data-transport-layer
-    newTag: prerelease-dtl-race
+    newTag: 0.5.21
   - name: ethereumoptimism/l2geth
     newName: ethereumoptimism/l2geth
-    newTag: prerelease-l2g-l1-sync-recovery
+    newTag: 0.5.14
   - name: ethereumoptimism/replica-healthcheck
     newName: ethereumoptimism/replica-healthcheck
     newTag: 0.3.6
-  - name: ethereumoptimism/replica-healthcheck-v1
-    newName: ethereumoptimism/replica-healthcheck
-    newTag: 1.0.6
 
 patchesStrategicMerge:
   - ./patches/dtl.yaml
@@ -50,8 +46,3 @@ patches:
       version: v1
       kind: StatefulSet
       name: data-transport-layer
-
-configMapGenerator:
-  - name: replica-healthcheck-v1
-    envs:
-      - ./replica-healthcheck-v1.env

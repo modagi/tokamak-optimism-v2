@@ -1,7 +1,7 @@
 /* Imports: External */
 import { Signer } from 'ethers'
 import { getContractFactory } from '@eth-optimism/contracts'
-import { Address, getChainId, sleep } from '@eth-optimism/core-utils'
+import { sleep } from '@eth-optimism/core-utils'
 import {
   BaseServiceV2,
   validators,
@@ -45,25 +45,20 @@ export class MessageRelayerService extends BaseServiceV2<
 > {
   constructor(options?: Partial<MessageRelayerOptions>) {
     super({
-      // eslint-disable-next-line @typescript-eslint/no-var-requires
-      version: require('../package.json').version,
-      name: 'message-relayer',
+      name: 'Message_Relayer',
       options,
       optionsSpec: {
         l1RpcProvider: {
           validator: validators.provider,
           desc: 'Provider for interacting with L1.',
-          secret: true,
         },
         l2RpcProvider: {
           validator: validators.provider,
           desc: 'Provider for interacting with L2.',
-          secret: true,
         },
         l1Wallet: {
           validator: validators.wallet,
           desc: 'Wallet used to interact with L1.',
-          secret: true,
         },
         fromL2TransactionIndex: {
           validator: validators.num,
@@ -97,6 +92,8 @@ export class MessageRelayerService extends BaseServiceV2<
       this.options.l1RpcProvider
     )
 
+    const l1Network = await this.state.wallet.provider.getNetwork()
+    const l1ChainId = l1Network.chainId
     let contracts = {}
 
     if (this.options.addressManagerAddress) {
@@ -129,19 +126,10 @@ export class MessageRelayerService extends BaseServiceV2<
       }
     }
 
-    const l1ChainId = await getChainId(this.state.wallet.provider)
-    const l2ChainId = await getChainId(this.options.l2RpcProvider)
-    const depositConfirmationBlocks: NumberLike =
-      DEPOSIT_CONFIRMATION_BLOCKS[l2ChainId]
-    const l1BlockTimeSeconds: NumberLike = CHAIN_BLOCK_TIMES[l1ChainId]
-
     this.state.messenger = new CrossChainMessenger({
       l1SignerOrProvider: this.state.wallet,
       l2SignerOrProvider: this.options.l2RpcProvider,
       l1ChainId,
-      l2ChainId,
-      depositConfirmationBlocks,
-      l1BlockTimeSeconds,
       contracts,
     })
 
