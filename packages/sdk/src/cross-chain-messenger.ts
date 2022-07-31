@@ -86,12 +86,9 @@ export class CrossChainMessenger implements ICrossChainMessenger {
     this.l1SignerOrProvider = toSignerOrProvider(opts.l1SignerOrProvider)
     this.l2SignerOrProvider = toSignerOrProvider(opts.l2SignerOrProvider)
     this.l1ChainId = toNumber(opts.l1ChainId)
-<<<<<<< HEAD
     this.fastRelayer = opts.fastRelayer
 
     // console.log("SDK - setting fastRelayer to", this.fastRelayer)
-=======
->>>>>>> parent of 0746cc6a... Merge branch 'migration-20220629' into develop
 
     this.depositConfirmationBlocks =
       opts?.depositConfirmationBlocks !== undefined
