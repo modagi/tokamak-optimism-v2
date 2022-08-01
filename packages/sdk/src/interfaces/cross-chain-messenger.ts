@@ -794,6 +794,21 @@ export interface ICrossChainMessenger {
     ): Promise<BigNumber>
 
     /**
+     * Estimates gas required to finalize a batch cross chain message. Only applies to L2 to L1 messages.
+     *
+     * @param messages Array of Messages to generate the finalization transaction for.
+     * @param opts Additional options.
+     * @param opts.overrides Optional transaction overrides.
+     * @returns Gas estimate for the transaction.
+     */
+    finalizeBatchMessage(
+      messages: Array<MessageLike>,
+      opts?: {
+        overrides?: Overrides
+      }
+    ): Promise<BigNumber>
+
+    /**
      * Estimates gas required to approve some tokens to deposit into the L2 chain.
      *
      * @param l1Token The L1 token address.

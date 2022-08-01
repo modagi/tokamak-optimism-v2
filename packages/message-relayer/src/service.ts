@@ -1,7 +1,7 @@
 /* Imports: External */
 import { Signer } from 'ethers'
 import { getContractFactory } from '@eth-optimism/contracts'
-import { sleep } from '@eth-optimism/core-utils'
+import { Address, sleep } from '@eth-optimism/core-utils'
 import {
   BaseServiceV2,
   validators,

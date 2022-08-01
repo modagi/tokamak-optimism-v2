@@ -15,10 +15,13 @@ import { IBridgeAdapter } from './bridge-adapter'
 export interface OEL1Contracts {
   AddressManager: Contract
   L1CrossDomainMessenger: Contract
+  L1CrossDomainMessengerFast: Contract
   L1StandardBridge: Contract
   StateCommitmentChain: Contract
   CanonicalTransactionChain: Contract
   BondManager: Contract
+  L1MultiMessageRelayer: Contract
+  L1MultiMessageRelayerFast: Contract
 }
 
 /**
@@ -127,6 +130,11 @@ export enum MessageStatus {
    * Message has been relayed.
    */
   RELAYED,
+
+  /**
+   * Message has been relayed but failed in execution.
+   */
+  RELAYED_FAILED,
 }
 
 /**

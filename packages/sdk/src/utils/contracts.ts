@@ -56,24 +56,30 @@ export const CONTRACT_ADDRESSES: {
   // Mainnet
   1: {
     l1: {
-      AddressManager: '0xdE1FCfB0851916CA5101820A69b13a4E276bd81F',
-      L1CrossDomainMessenger: '0x25ace71c97B33Cc4729CF772ae268934F7ab5fA1',
-      L1StandardBridge: '0x99C9fc46f92E8a1c0deC1b1747d010903E884bE1',
-      StateCommitmentChain: '0xBe5dAb4A2e9cd0F27300dB4aB94BeE3A233AEB19',
-      CanonicalTransactionChain: '0x5E4e65926BA27467555EB562121fac00D24E9dD2',
-      BondManager: '0xcd626E1328b41fCF24737F137BcD4CE0c32bc8d1',
+      AddressManager: '0x8376ac6C3f73a25Dd994E0b0669ca7ee0C02F089',
+      L1CrossDomainMessenger: '0x6D4528d192dB72E282265D6092F4B872f9Dff69e',
+      L1CrossDomainMessengerFast: '0xD05b8fD53614e1569cAC01c6D8d41416d0a7257E',
+      L1StandardBridge: '0xdc1664458d2f0B6090bEa60A8793A4E66c2F1c00',
+      StateCommitmentChain: '0xdE7355C971A5B733fe2133753Abd7e5441d441Ec',
+      CanonicalTransactionChain: '0xfBd2541e316948B259264c02f370eD088E04c3Db',
+      BondManager: '0x60660e6CDEb423cf847dD11De4C473130D65b627',
+      L1MultiMessageRelayer: '0x5fD2CF99586B9D92f56CbaD0A3Ea4DF256A0070B',
+      L1MultiMessageRelayerFast: '0x2d6134Ac3e480fBDD263B7163d333dCA285f9622',
     },
     l2: DEFAULT_L2_CONTRACT_ADDRESSES,
   },
-  // Kovan
-  42: {
+  // Rinkeby
+  4: {
     l1: {
-      AddressManager: '0x100Dd3b414Df5BbA2B542864fF94aF8024aFdf3a',
-      L1CrossDomainMessenger: '0x4361d0F75A0186C05f971c566dC6bEa5957483fD',
-      L1StandardBridge: '0x22F24361D548e5FaAfb36d1437839f080363982B',
-      StateCommitmentChain: '0xD7754711773489F31A0602635f3F167826ce53C5',
-      CanonicalTransactionChain: '0xf7B88A133202d41Fe5E2Ab22e6309a1A4D50AF74',
-      BondManager: '0xc5a603d273E28185c18Ba4d26A0024B2d2F42740',
+      AddressManager: '0x93A96D6A5beb1F661cf052722A1424CDDA3e9418',
+      L1CrossDomainMessenger: '0xF10EEfC14eB5b7885Ea9F7A631a21c7a82cf5D76',
+      L1CrossDomainMessengerFast: '0xe2a82CE9671A283190DD5E3f077027979F2c039E',
+      L1StandardBridge: '0xDe085C82536A06b40D20654c2AbA342F2abD7077',
+      StateCommitmentChain: '0x39e52546e091A28831414949B1601449be03b307',
+      CanonicalTransactionChain: '0x321Bf0Df8F02FE665a7f7CcE31684A6dadB014b0',
+      BondManager: '0xAF41D3399A91C43E8f2d70d9b47741b10CFA4Fc4',
+      L1MultiMessageRelayer: '0x5C6263BCAa00C7f5988E148dB3CA178e1262E69f',
+      L1MultiMessageRelayerFast: '0x94BC5F5330B9EF9f520551cDB6bD8FC707760Af6',
     },
     l2: DEFAULT_L2_CONTRACT_ADDRESSES,
   },
@@ -82,22 +88,28 @@ export const CONTRACT_ADDRESSES: {
     l1: {
       AddressManager: '0x2F7E3cAC91b5148d336BbffB224B4dC79F09f01D',
       L1CrossDomainMessenger: '0xEcC89b9EDD804850C4F343A278Be902be11AaF42',
+      L1CrossDomainMessengerFast: '0x0000000000000000000000000000000000000000',
       L1StandardBridge: '0x73298186A143a54c20ae98EEE5a025bD5979De02',
       StateCommitmentChain: '0x1afcA918eff169eE20fF8AB6Be75f3E872eE1C1A',
       CanonicalTransactionChain: '0x2ebA8c4EfDB39A8Cd8f9eD65c50ec079f7CEBD81',
       BondManager: '0xE5AE60bD6F8DEe4D0c2BC9268e23B92F1cacC58F',
+      L1MultiMessageRelayer: '0x0000000000000000000000000000000000000000',
+      L1MultiMessageRelayerFast: '0x0000000000000000000000000000000000000000',
     },
     l2: DEFAULT_L2_CONTRACT_ADDRESSES,
   },
-  // Rinkeby
-  4: {
+  // Kovan
+  42: {
     l1: {
-      AddressManager: '0xc21078f1ef3b307FcE21A2C1716d6D7E159e3F0C',
-      L1CrossDomainMessenger: '0xD376aF6BA00277fa591324726BCD338866FBf500',
-      L1StandardBridge: '0x744Dd3c9B70f8097a4A155f51f62A015E5660368',
-      StateCommitmentChain: '0x2FBCBcC3b3c4f5257418faCD7bC7fC4Ee679e7D1',
-      CanonicalTransactionChain: '0x13689df386AEbc1ff004B8f46f939a0B51A82478',
-      BondManager: '0x912327eb547Be990bf5E9e922020e7e9ABc727FD',
+      AddressManager: '0x100Dd3b414Df5BbA2B542864fF94aF8024aFdf3a',
+      L1CrossDomainMessenger: '0x4361d0F75A0186C05f971c566dC6bEa5957483fD',
+      L1CrossDomainMessengerFast: '0x0000000000000000000000000000000000000000',
+      L1StandardBridge: '0x22F24361D548e5FaAfb36d1437839f080363982B',
+      StateCommitmentChain: '0xD7754711773489F31A0602635f3F167826ce53C5',
+      CanonicalTransactionChain: '0xf7B88A133202d41Fe5E2Ab22e6309a1A4D50AF74',
+      BondManager: '0xc5a603d273E28185c18Ba4d26A0024B2d2F42740',
+      L1MultiMessageRelayer: '0x0000000000000000000000000000000000000000',
+      L1MultiMessageRelayerFast: '0x0000000000000000000000000000000000000000',
     },
     l2: DEFAULT_L2_CONTRACT_ADDRESSES,
   },
@@ -105,11 +117,14 @@ export const CONTRACT_ADDRESSES: {
   31337: {
     l1: {
       AddressManager: '0x5FbDB2315678afecb367f032d93F642f64180aa3',
-      L1CrossDomainMessenger: '0x8A791620dd6260079BF849Dc5567aDC3F2FdC318',
-      L1StandardBridge: '0x610178dA211FEF7D417bC0e6FeD39F05609AD788',
-      StateCommitmentChain: '0xDc64a140Aa3E981100a9becA4E685f962f0cF6C9',
-      CanonicalTransactionChain: '0xCf7Ed3AccA5a467e9e704C703E8D87F634fB0Fc9',
-      BondManager: '0x5FC8d32690cc91D4c39d9d3abcBD16989F875707',
+      L1CrossDomainMessenger: '0xa85233C63b9Ee964Add6F2cffe00Fd84eb32338f', // this is the Proxy__L1CrossDomainMessenger
+      L1CrossDomainMessengerFast: '0x4EE6eCAD1c2Dae9f525404De8555724e3c35d07B', // this is the Proxy__L1CrossDomainMessengerFast
+      L1StandardBridge: '0x09635F643e140090A9A8Dcd712eD6285858ceBef',
+      StateCommitmentChain: '0x9A9f2CCfdE556A7E9Ff0848998Aa4a0CFD8863AE',
+      CanonicalTransactionChain: '0x0B306BF915C4d645ff596e518fAf3F9669b97016',
+      BondManager: '0x3Aa5ebB10DC797CAC828524e59A333d0A371443c',
+      L1MultiMessageRelayer: '0x9E545E3C0baAB3E08CdfD552C960A1050f373042',
+      L1MultiMessageRelayerFast: '0xeF31027350Be2c7439C1b0BE022d49421488b72C',
     },
     l2: DEFAULT_L2_CONTRACT_ADDRESSES,
   },
@@ -145,6 +160,31 @@ export const BRIDGE_ADAPTER_DATA: {
       l2Bridge: '0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65',
     },
   },
+  4: {
+    // Rinkeby
+    Standard: {
+      Adapter: StandardBridgeAdapter,
+      l1Bridge: CONTRACT_ADDRESSES[4].l1.L1StandardBridge,
+      l2Bridge: predeploys.L2StandardBridge,
+    },
+    ETH: {
+      Adapter: ETHBridgeAdapter,
+      l1Bridge: CONTRACT_ADDRESSES[4].l1.L1StandardBridge,
+      l2Bridge: predeploys.L2StandardBridge,
+    },
+  },
+  5: {
+    Standard: {
+      Adapter: StandardBridgeAdapter,
+      l1Bridge: CONTRACT_ADDRESSES[5].l1.L1StandardBridge,
+      l2Bridge: predeploys.L2StandardBridge,
+    },
+    ETH: {
+      Adapter: ETHBridgeAdapter,
+      l1Bridge: CONTRACT_ADDRESSES[5].l1.L1StandardBridge,
+      l2Bridge: predeploys.L2StandardBridge,
+    },
+  },
   42: {
     Standard: {
       Adapter: StandardBridgeAdapter,
@@ -170,30 +210,6 @@ export const BRIDGE_ADAPTER_DATA: {
       Adapter: DAIBridgeAdapter,
       l1Bridge: '0xb415e822C4983ecD6B1c1596e8a5f976cf6CD9e3',
       l2Bridge: '0x467194771dAe2967Aef3ECbEDD3Bf9a310C76C65',
-    },
-  },
-  5: {
-    Standard: {
-      Adapter: StandardBridgeAdapter,
-      l1Bridge: CONTRACT_ADDRESSES[5].l1.L1StandardBridge,
-      l2Bridge: predeploys.L2StandardBridge,
-    },
-    ETH: {
-      Adapter: ETHBridgeAdapter,
-      l1Bridge: CONTRACT_ADDRESSES[5].l1.L1StandardBridge,
-      l2Bridge: predeploys.L2StandardBridge,
-    },
-  },
-  4: {
-    Standard: {
-      Adapter: StandardBridgeAdapter,
-      l1Bridge: CONTRACT_ADDRESSES[4].l1.L1StandardBridge,
-      l2Bridge: predeploys.L2StandardBridge,
-    },
-    ETH: {
-      Adapter: ETHBridgeAdapter,
-      l1Bridge: CONTRACT_ADDRESSES[4].l1.L1StandardBridge,
-      l2Bridge: predeploys.L2StandardBridge,
     },
   },
   31337: {
@@ -248,6 +264,7 @@ export const getOEContract = (
   } = {}
 ): Contract => {
   const addresses = CONTRACT_ADDRESSES[l1ChainId]
+  // console.log("getOEContract: looking for:",contractName)
   if (addresses === undefined && opts.address === undefined) {
     throw new Error(
       `cannot get contract ${contractName} for unknown L1 chain ID ${l1ChainId}, you must provide an address`
@@ -289,10 +306,13 @@ export const getAllOEContracts = (
     l1: {
       AddressManager: undefined,
       L1CrossDomainMessenger: undefined,
+      L1CrossDomainMessengerFast: undefined,
       L1StandardBridge: undefined,
       StateCommitmentChain: undefined,
       CanonicalTransactionChain: undefined,
       BondManager: undefined,
+      L1MultiMessageRelayer: undefined,
+      L1MultiMessageRelayerFast: undefined,
     },
     l2: DEFAULT_L2_CONTRACT_ADDRESSES,
   }
