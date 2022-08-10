@@ -50,11 +50,10 @@ actor('Uniswap swapper', () => {
   setupRun(async () => {
     const wallet = Wallet.createRandom().connect(env.l2Provider)
 
-    const sendTx = await env.l2Wallet.sendTransaction({
+    await env.l2Wallet.sendTransaction({
       to: wallet.address,
       value: utils.parseEther('0.1'),
     })
-    await sendTx.wait()
 
     for (const token of tokens) {
       let tx = await token.transfer(wallet.address, 1000000)

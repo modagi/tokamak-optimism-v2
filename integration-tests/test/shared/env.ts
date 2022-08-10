@@ -4,16 +4,12 @@ import {
   TransactionResponse,
   TransactionReceipt,
 } from '@ethersproject/providers'
-import { getChainId, sleep } from '@eth-optimism/core-utils'
+import { sleep } from '@eth-optimism/core-utils'
 import {
   CrossChainMessenger,
   MessageStatus,
   MessageDirection,
-  StandardBridgeAdapter,
-  ETHBridgeAdapter,
-  BridgeAdapterData,
 } from '@eth-optimism/sdk'
-import { predeploys } from '@eth-optimism/contracts'
 
 /* Imports: Internal */
 import {
@@ -58,38 +54,12 @@ export class OptimismEnv {
   }
 
   static async new(): Promise<OptimismEnv> {
-    let bridgeOverrides: BridgeAdapterData
-    if (envConfig.L1_STANDARD_BRIDGE) {
-      bridgeOverrides = {
-        Standard: {
-          Adapter: StandardBridgeAdapter,
-          l1Bridge: envConfig.L1_STANDARD_BRIDGE,
-          l2Bridge: predeploys.L2StandardBridge,
-        },
-        ETH: {
-          Adapter: ETHBridgeAdapter,
-          l1Bridge: envConfig.L1_STANDARD_BRIDGE,
-          l2Bridge: predeploys.L2StandardBridge,
-        },
-      }
-    }
+    const network = await l1Provider.getNetwork()
 
     const messenger = new CrossChainMessenger({
       l1SignerOrProvider: l1Wallet,
       l2SignerOrProvider: l2Wallet,
-      l1ChainId: await getChainId(l1Provider),
-      l2ChainId: await getChainId(l2Provider),
-      contracts: {
-        l1: {
-          AddressManager: envConfig.ADDRESS_MANAGER,
-          L1CrossDomainMessenger: envConfig.L1_CROSS_DOMAIN_MESSENGER,
-          L1StandardBridge: envConfig.L1_STANDARD_BRIDGE,
-          StateCommitmentChain: envConfig.STATE_COMMITMENT_CHAIN,
-          CanonicalTransactionChain: envConfig.CANONICAL_TRANSACTION_CHAIN,
-          BondManager: envConfig.BOND_MANAGER,
-        },
-      },
-      bridges: bridgeOverrides,
+      l1ChainId: network.chainId,
     })
 
     // fund the user if needed

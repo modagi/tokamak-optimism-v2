@@ -1,35 +1,41 @@
+/* External Imports */
 import { ethers } from 'hardhat'
-import { Contract } from 'ethers'
+import { ContractFactory, Contract, Signer } from 'ethers'
 import { calculateL1GasUsed, calculateL1Fee } from '@eth-optimism/core-utils'
-import { SignerWithAddress } from '@nomiclabs/hardhat-ethers/signers'
 
 import { expect } from '../../../setup'
-import { deploy } from '../../../helpers'
 
 describe('OVM_GasPriceOracle', () => {
   const initialGasPrice = 0
-
-  let signer1: SignerWithAddress
-  let signer2: SignerWithAddress
+  let signer1: Signer
+  let signer2: Signer
   before(async () => {
     ;[signer1, signer2] = await ethers.getSigners()
   })
 
+  let Factory__OVM_GasPriceOracle: ContractFactory
+  before(async () => {
+    Factory__OVM_GasPriceOracle = await ethers.getContractFactory(
+      'OVM_GasPriceOracle'
+    )
+  })
+
   let OVM_GasPriceOracle: Contract
   beforeEach(async () => {
-    OVM_GasPriceOracle = await deploy('OVM_GasPriceOracle', {
-      signer: signer1,
-      args: [signer1.address],
-    })
+    OVM_GasPriceOracle = await Factory__OVM_GasPriceOracle.deploy(
+      await signer1.getAddress()
+    )
 
-    await OVM_GasPriceOracle.setOverhead(2750)
-    await OVM_GasPriceOracle.setScalar(1500000)
-    await OVM_GasPriceOracle.setDecimals(6)
+    OVM_GasPriceOracle.setOverhead(2750)
+    OVM_GasPriceOracle.setScalar(1500000)
+    OVM_GasPriceOracle.setDecimals(6)
   })
 
   describe('owner', () => {
     it('should have an owner', async () => {
-      expect(await OVM_GasPriceOracle.owner()).to.equal(signer1.address)
+      expect(await OVM_GasPriceOracle.owner()).to.equal(
+        await signer1.getAddress()
+      )
     })
   })
 
@@ -40,11 +46,12 @@ describe('OVM_GasPriceOracle', () => {
     })
 
     it('should succeed if called by the owner and is equal to `0`', async () => {
-      await expect(OVM_GasPriceOracle.setGasPrice(0)).to.not.be.reverted
+      await expect(OVM_GasPriceOracle.connect(signer1).setGasPrice(0)).to.not.be
+        .reverted
     })
 
     it('should emit event', async () => {
-      await expect(OVM_GasPriceOracle.setGasPrice(100))
+      await expect(OVM_GasPriceOracle.connect(signer1).setGasPrice(100))
         .to.emit(OVM_GasPriceOracle, 'GasPriceUpdated')
         .withArgs(100)
     })
@@ -58,18 +65,25 @@ describe('OVM_GasPriceOracle', () => {
     it('should change when setGasPrice is called', async () => {
       const gasPrice = 1234
 
-      await OVM_GasPriceOracle.setGasPrice(gasPrice)
+      await OVM_GasPriceOracle.connect(signer1).setGasPrice(gasPrice)
 
       expect(await OVM_GasPriceOracle.gasPrice()).to.equal(gasPrice)
     })
 
     it('is the 1st storage slot', async () => {
-      await OVM_GasPriceOracle.setGasPrice(333433)
+      const gasPrice = 333433
+      const slot = 1
 
+      // set the price
+      await OVM_GasPriceOracle.connect(signer1).setGasPrice(gasPrice)
+
+      // get the storage slot value
+      const priceAtSlot = await signer1.provider.getStorageAt(
+        OVM_GasPriceOracle.address,
+        slot
+      )
       expect(await OVM_GasPriceOracle.gasPrice()).to.equal(
-        ethers.BigNumber.from(
-          await signer1.provider.getStorageAt(OVM_GasPriceOracle.address, 1)
-        )
+        ethers.BigNumber.from(priceAtSlot)
       )
     })
   })
@@ -81,11 +95,12 @@ describe('OVM_GasPriceOracle', () => {
     })
 
     it('should succeed if called by the owner', async () => {
-      await expect(OVM_GasPriceOracle.setL1BaseFee(0)).to.not.be.reverted
+      await expect(OVM_GasPriceOracle.connect(signer1).setL1BaseFee(0)).to.not
+        .be.reverted
     })
 
     it('should emit event', async () => {
-      await expect(OVM_GasPriceOracle.setL1BaseFee(100))
+      await expect(OVM_GasPriceOracle.connect(signer1).setL1BaseFee(100))
         .to.emit(OVM_GasPriceOracle, 'L1BaseFeeUpdated')
         .withArgs(100)
     })
@@ -98,17 +113,24 @@ describe('OVM_GasPriceOracle', () => {
 
     it('should change when setL1BaseFee is called', async () => {
       const baseFee = 1234
-      await OVM_GasPriceOracle.setL1BaseFee(baseFee)
+      await OVM_GasPriceOracle.connect(signer1).setL1BaseFee(baseFee)
       expect(await OVM_GasPriceOracle.l1BaseFee()).to.equal(baseFee)
     })
 
     it('is the 2nd storage slot', async () => {
-      await OVM_GasPriceOracle.setGasPrice(12345)
+      const baseFee = 12345
+      const slot = 2
 
+      // set the price
+      await OVM_GasPriceOracle.connect(signer1).setGasPrice(baseFee)
+
+      // get the storage slot value
+      const priceAtSlot = await signer1.provider.getStorageAt(
+        OVM_GasPriceOracle.address,
+        slot
+      )
       expect(await OVM_GasPriceOracle.l1BaseFee()).to.equal(
-        ethers.BigNumber.from(
-          await signer1.provider.getStorageAt(OVM_GasPriceOracle.address, 2)
-        )
+        ethers.BigNumber.from(priceAtSlot)
       )
     })
   })
@@ -128,10 +150,9 @@ describe('OVM_GasPriceOracle', () => {
     for (const input of inputs) {
       it(`case: ${input}`, async () => {
         const overhead = await OVM_GasPriceOracle.overhead()
-
-        expect(await OVM_GasPriceOracle.getL1GasUsed(input)).to.deep.equal(
-          calculateL1GasUsed(input, overhead)
-        )
+        const cost = await OVM_GasPriceOracle.getL1GasUsed(input)
+        const expected = calculateL1GasUsed(input, overhead)
+        expect(cost).to.deep.equal(expected)
       })
     }
   })
@@ -141,16 +162,19 @@ describe('OVM_GasPriceOracle', () => {
       it(`case: ${input}`, async () => {
         await OVM_GasPriceOracle.setGasPrice(1)
         await OVM_GasPriceOracle.setL1BaseFee(1)
-
-        expect(await OVM_GasPriceOracle.getL1Fee(input)).to.deep.equal(
-          calculateL1Fee(
-            input,
-            await OVM_GasPriceOracle.overhead(),
-            await OVM_GasPriceOracle.l1BaseFee(),
-            await OVM_GasPriceOracle.scalar(),
-            await OVM_GasPriceOracle.decimals()
-          )
+        const decimals = await OVM_GasPriceOracle.decimals()
+        const overhead = await OVM_GasPriceOracle.overhead()
+        const scalar = await OVM_GasPriceOracle.scalar()
+        const l1BaseFee = await OVM_GasPriceOracle.l1BaseFee()
+        const l1Fee = await OVM_GasPriceOracle.getL1Fee(input)
+        const expected = calculateL1Fee(
+          input,
+          overhead,
+          l1BaseFee,
+          scalar,
+          decimals
         )
+        expect(l1Fee).to.deep.equal(expected)
       })
     }
   })
@@ -162,11 +186,12 @@ describe('OVM_GasPriceOracle', () => {
     })
 
     it('should succeed if called by the owner', async () => {
-      await expect(OVM_GasPriceOracle.setOverhead(0)).to.not.be.reverted
+      await expect(OVM_GasPriceOracle.connect(signer1).setOverhead(0)).to.not.be
+        .reverted
     })
 
     it('should emit event', async () => {
-      await expect(OVM_GasPriceOracle.setOverhead(100))
+      await expect(OVM_GasPriceOracle.connect(signer1).setOverhead(100))
         .to.emit(OVM_GasPriceOracle, 'OverheadUpdated')
         .withArgs(100)
     })
@@ -179,17 +204,24 @@ describe('OVM_GasPriceOracle', () => {
 
     it('should change when setOverhead is called', async () => {
       const overhead = 6657
-      await OVM_GasPriceOracle.setOverhead(overhead)
+      await OVM_GasPriceOracle.connect(signer1).setOverhead(overhead)
       expect(await OVM_GasPriceOracle.overhead()).to.equal(overhead)
     })
 
     it('is the 3rd storage slot', async () => {
-      await OVM_GasPriceOracle.setOverhead(119090)
+      const overhead = 119090
+      const slot = 3
 
+      // set the price
+      await OVM_GasPriceOracle.connect(signer1).setOverhead(overhead)
+
+      // get the storage slot value
+      const priceAtSlot = await signer1.provider.getStorageAt(
+        OVM_GasPriceOracle.address,
+        slot
+      )
       expect(await OVM_GasPriceOracle.overhead()).to.equal(
-        ethers.BigNumber.from(
-          await signer1.provider.getStorageAt(OVM_GasPriceOracle.address, 3)
-        )
+        ethers.BigNumber.from(priceAtSlot)
       )
     })
   })
@@ -201,11 +233,12 @@ describe('OVM_GasPriceOracle', () => {
     })
 
     it('should succeed if called by the owner', async () => {
-      await expect(OVM_GasPriceOracle.setScalar(0)).to.not.be.reverted
+      await expect(OVM_GasPriceOracle.connect(signer1).setScalar(0)).to.not.be
+        .reverted
     })
 
     it('should emit event', async () => {
-      await expect(OVM_GasPriceOracle.setScalar(100))
+      await expect(OVM_GasPriceOracle.connect(signer1).setScalar(100))
         .to.emit(OVM_GasPriceOracle, 'ScalarUpdated')
         .withArgs(100)
     })
@@ -218,27 +251,39 @@ describe('OVM_GasPriceOracle', () => {
 
     it('should change when setScalar is called', async () => {
       const scalar = 9999
-      await OVM_GasPriceOracle.setScalar(scalar)
+      await OVM_GasPriceOracle.connect(signer1).setScalar(scalar)
       expect(await OVM_GasPriceOracle.scalar()).to.equal(scalar)
     })
 
     it('is the 4rd storage slot', async () => {
-      await OVM_GasPriceOracle.setScalar(111111)
+      const overhead = 111111
+      const slot = 4
 
+      // set the price
+      await OVM_GasPriceOracle.connect(signer1).setScalar(overhead)
+
+      // get the storage slot value
+      const priceAtSlot = await signer1.provider.getStorageAt(
+        OVM_GasPriceOracle.address,
+        slot
+      )
       expect(await OVM_GasPriceOracle.scalar()).to.equal(
-        ethers.BigNumber.from(
-          await signer1.provider.getStorageAt(OVM_GasPriceOracle.address, 4)
-        )
+        ethers.BigNumber.from(priceAtSlot)
       )
     })
   })
 
   describe('decimals', () => {
     it('is the 5th storage slot', async () => {
+      const slot = 5
+
+      // get the storage slot value
+      const priceAtSlot = await signer1.provider.getStorageAt(
+        OVM_GasPriceOracle.address,
+        slot
+      )
       expect(await OVM_GasPriceOracle.decimals()).to.equal(
-        ethers.BigNumber.from(
-          await signer1.provider.getStorageAt(OVM_GasPriceOracle.address, 5)
-        )
+        ethers.BigNumber.from(priceAtSlot)
       )
     })
   })

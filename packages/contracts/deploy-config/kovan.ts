@@ -1,4 +1,7 @@
-const config = {
+import { DeployConfig } from '../src/deploy-config'
+
+const config: DeployConfig = {
+  network: 'kovan',
   numDeployConfirmations: 1,
   gasPrice: 5_000_000_000,
   l1BlockTimeSeconds: 15,

@@ -1,13 +1,16 @@
+/* External Imports */
+import { ethers } from 'hardhat'
 import { Contract } from 'ethers'
 import { applyL1ToL2Alias, undoL1ToL2Alias } from '@eth-optimism/core-utils'
 
 import { expect } from '../../../setup'
-import { deploy } from '../../../helpers'
 
 describe('AddressAliasHelper', () => {
   let AddressAliasHelper: Contract
   before(async () => {
-    AddressAliasHelper = await deploy('TestLib_AddressAliasHelper')
+    AddressAliasHelper = await (
+      await ethers.getContractFactory('TestLib_AddressAliasHelper')
+    ).deploy()
   })
 
   describe('applyL1ToL2Alias', () => {

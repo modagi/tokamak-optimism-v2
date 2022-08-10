@@ -51,9 +51,8 @@ import (
 )
 
 var (
-	errNoSequencerURL  = errors.New("sequencer transaction forwarding not configured")
-	errStillSyncing    = errors.New("sequencer still syncing, cannot accept transactions")
-	errBlockNotIndexed = errors.New("block in range not indexed, this should never happen")
+	errNoSequencerURL = errors.New("sequencer transaction forwarding not configured")
+	errStillSyncing   = errors.New("sequencer still syncing, cannot accept transactions")
 )
 
 const (
@@ -781,11 +780,8 @@ func (s *PublicBlockChainAPI) GetBlockRange(ctx context.Context, startNumber rpc
 	// For each block in range, get block and append to array.
 	for number := startNumber; number <= endNumber; number++ {
 		block, err := s.GetBlockByNumber(ctx, number, fullTx)
-		if err != nil {
+		if block == nil || err != nil {
 			return nil, err
-		}
-		if block == nil {
-			return nil, errBlockNotIndexed
 		}
 		blocks = append(blocks, block)
 	}

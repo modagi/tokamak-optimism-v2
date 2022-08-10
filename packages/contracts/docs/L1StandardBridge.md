@@ -6,9 +6,26 @@
 
 
 
-*The L1 ETH and ERC20 Bridge is a contract which stores deposited L1 funds and standard tokens that are in use on L2. It synchronizes a corresponding L2 Bridge, informing it of deposits and listening to it for newly finalized withdrawals.*
+*The L1 ETH and ERC20 Bridge is a contract which stores deposited L1 funds and standard tokens that are in use on L2. It synchronizes a corresponding L2 Bridge, informing it of deposits and listening to it for newly finalized withdrawals. Runtime target: EVM*
 
 ## Methods
+
+### currentDepositInfoHash
+
+```solidity
+function currentDepositInfoHash() external view returns (bytes32)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | bytes32 | undefined
 
 ### depositERC20
 
@@ -194,6 +211,23 @@ function l2TokenBridge() external view returns (address)
 |---|---|---|
 | _0 | address | Address of the corresponding L2 bridge contract.
 
+### lastHashUpdateBlock
+
+```solidity
+function lastHashUpdateBlock() external view returns (uint256)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | uint256 | undefined
+
 ### messenger
 
 ```solidity
@@ -210,6 +244,23 @@ function messenger() external view returns (address)
 | Name | Type | Description |
 |---|---|---|
 | _0 | address | undefined
+
+### priorDepositInfoHash
+
+```solidity
+function priorDepositInfoHash() external view returns (bytes32)
+```
+
+
+
+
+
+
+#### Returns
+
+| Name | Type | Description |
+|---|---|---|
+| _0 | bytes32 | undefined
 
 
 

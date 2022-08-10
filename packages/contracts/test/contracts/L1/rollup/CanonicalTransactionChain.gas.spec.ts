@@ -1,6 +1,6 @@
 /* External Imports */
 import { ethers } from 'hardhat'
-import { Signer, Contract } from 'ethers'
+import { Signer, ContractFactory, Contract } from 'ethers'
 import { smock, FakeContract } from '@defi-wonderland/smock'
 import {
   AppendSequencerBatchParams,
@@ -9,10 +9,12 @@ import {
   expectApprox,
 } from '@eth-optimism/core-utils'
 import { TransactionResponse } from '@ethersproject/abstract-provider'
+import { keccak256 } from 'ethers/lib/utils'
 
 /* Internal Imports */
 import {
-  deploy,
+  makeAddressManager,
+  setProxyTarget,
   L2_GAS_DISCOUNT_DIVISOR,
   ENQUEUE_GAS_COST,
   getEthTime,
@@ -29,11 +31,11 @@ const appendSequencerBatch = async (
   CanonicalTransactionChain: Contract,
   batch: AppendSequencerBatchParams
 ): Promise<TransactionResponse> => {
+  const methodId = keccak256(Buffer.from('appendSequencerBatch()')).slice(2, 10)
+  const calldata = encodeAppendSequencerBatch(batch)
   return CanonicalTransactionChain.signer.sendTransaction({
     to: CanonicalTransactionChain.address,
-    data:
-      ethers.utils.id('appendSequencerBatch()').slice(0, 10) +
-      encodeAppendSequencerBatch(batch),
+    data: '0x' + methodId + calldata,
   })
 }
 
@@ -45,37 +47,53 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
 
   let AddressManager: Contract
   let Fake__StateCommitmentChain: FakeContract
-  let CanonicalTransactionChain: Contract
-  beforeEach(async () => {
-    AddressManager = await deploy('Lib_AddressManager')
-
+  before(async () => {
+    AddressManager = await makeAddressManager()
     await AddressManager.setAddress(
       'OVM_Sequencer',
       await sequencer.getAddress()
     )
 
     Fake__StateCommitmentChain = await smock.fake<Contract>(
-      'StateCommitmentChain'
+      await ethers.getContractFactory('StateCommitmentChain')
     )
 
-    await AddressManager.setAddress(
+    await setProxyTarget(
+      AddressManager,
       'StateCommitmentChain',
-      Fake__StateCommitmentChain.address
+      Fake__StateCommitmentChain
+    )
+  })
+
+  let Factory__CanonicalTransactionChain: ContractFactory
+  let Factory__ChainStorageContainer: ContractFactory
+  before(async () => {
+    Factory__CanonicalTransactionChain = await ethers.getContractFactory(
+      'CanonicalTransactionChain'
     )
 
-    CanonicalTransactionChain = await deploy('CanonicalTransactionChain', {
-      signer: sequencer,
-      args: [
-        AddressManager.address,
-        MAX_GAS_LIMIT,
-        L2_GAS_DISCOUNT_DIVISOR,
-        ENQUEUE_GAS_COST,
-      ],
-    })
+    Factory__ChainStorageContainer = await ethers.getContractFactory(
+      'ChainStorageContainer'
+    )
+  })
 
-    const batches = await deploy('ChainStorageContainer', {
-      args: [AddressManager.address, 'CanonicalTransactionChain'],
-    })
+  let CanonicalTransactionChain: Contract
+  beforeEach(async () => {
+    CanonicalTransactionChain = await Factory__CanonicalTransactionChain.deploy(
+      AddressManager.address,
+      MAX_GAS_LIMIT,
+      L2_GAS_DISCOUNT_DIVISOR,
+      ENQUEUE_GAS_COST
+    )
+
+    const batches = await Factory__ChainStorageContainer.deploy(
+      AddressManager.address,
+      'CanonicalTransactionChain'
+    )
+    await Factory__ChainStorageContainer.deploy(
+      AddressManager.address,
+      'CanonicalTransactionChain'
+    )
 
     await AddressManager.setAddress(
       'ChainStorageContainer-CTC-batches',
@@ -89,7 +107,12 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
   })
 
   describe('appendSequencerBatch [ @skip-on-coverage ]', () => {
+    beforeEach(() => {
+      CanonicalTransactionChain = CanonicalTransactionChain.connect(sequencer)
+    })
+
     it('200 transactions in a single context', async () => {
+      console.log(`Benchmark: 200 transactions in a single context.`)
       const timestamp = (await getEthTime(ethers.provider)) - 100
       const blockNumber = await getNextBlockNumber(ethers.provider)
 
@@ -120,12 +143,13 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
       const receipt = await res.wait()
       const gasUsed = receipt.gasUsed.toNumber()
 
+      console.log('Benchmark complete.')
+
       console.log('Fixed calldata cost:', fixedCalldataCost)
       console.log(
         'Non-calldata overhead gas cost per transaction:',
         (gasUsed - fixedCalldataCost) / numTxs
       )
-
       expectApprox(gasUsed, 1_402_638, {
         absoluteUpperDeviation: 1000,
         // Assert a lower bound of 1% reduction on gas cost. If your tests are breaking because your
@@ -135,6 +159,7 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
     }).timeout(10_000_000)
 
     it('200 transactions in 200 contexts', async () => {
+      console.log(`Benchmark: 200 transactions in 200 contexts.`)
       const timestamp = (await getEthTime(ethers.provider)) - 100
       const blockNumber = await getNextBlockNumber(ethers.provider)
 
@@ -165,12 +190,13 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
       const receipt = await res.wait()
       const gasUsed = receipt.gasUsed.toNumber()
 
+      console.log('Benchmark complete.')
+
       console.log('Fixed calldata cost:', fixedCalldataCost)
       console.log(
         'Non-calldata overhead gas cost per transaction:',
         (gasUsed - fixedCalldataCost) / numTxs
       )
-
       expectApprox(gasUsed, 1_619_781, {
         absoluteUpperDeviation: 1000,
         // Assert a lower bound of 1% reduction on gas cost. If your tests are breaking because your
@@ -222,12 +248,12 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
       const gasUsed = receipt.gasUsed.toNumber()
 
       console.log('Benchmark complete.')
+
       console.log('Fixed calldata cost:', fixedCalldataCost)
       console.log(
         'Non-calldata overhead gas cost per transaction:',
         (gasUsed - fixedCalldataCost) / numTxs
       )
-
       expectApprox(gasUsed, 891_158, {
         absoluteUpperDeviation: 1000,
         // Assert a lower bound of 1% reduction on gas cost. If your tests are breaking because your
@@ -238,12 +264,13 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
   })
 
   describe('enqueue [ @skip-on-coverage ]', () => {
-    const data = '0x' + '12'.repeat(1234)
-
-    let enqueueL2GasPrepaid: number
+    let enqueueL2GasPrepaid
+    let data
     beforeEach(async () => {
+      CanonicalTransactionChain = CanonicalTransactionChain.connect(sequencer)
       enqueueL2GasPrepaid =
         await CanonicalTransactionChain.enqueueL2GasPrepaid()
+      data = '0x' + '12'.repeat(1234)
     })
 
     it('cost to enqueue a transaction above the prepaid threshold', async () => {
@@ -254,9 +281,10 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
         l2GasLimit,
         data
       )
-
       const receipt = await res.wait()
       const gasUsed = receipt.gasUsed.toNumber()
+
+      console.log('Benchmark complete.')
 
       expectApprox(gasUsed, 196_687, {
         absoluteUpperDeviation: 500,
@@ -274,9 +302,10 @@ describe('[GAS BENCHMARK] CanonicalTransactionChain [ @skip-on-coverage ]', () =
         l2GasLimit,
         data
       )
-
       const receipt = await res.wait()
       const gasUsed = receipt.gasUsed.toNumber()
+
+      console.log('Benchmark complete.')
 
       expectApprox(gasUsed, 134_100, {
         absoluteUpperDeviation: 500,

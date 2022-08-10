@@ -93,22 +93,12 @@ export class L1TransportServer extends BaseService<L1TransportServerOptions> {
 
     this.state.l1RpcProvider =
       typeof this.options.l1RpcProvider === 'string'
-        ? new JsonRpcProvider({
-            url: this.options.l1RpcProvider,
-            user: this.options.l1RpcProviderUser,
-            password: this.options.l1RpcProviderPassword,
-            headers: { 'User-Agent': 'data-transport-layer' },
-          })
+        ? new JsonRpcProvider(this.options.l1RpcProvider)
         : this.options.l1RpcProvider
 
     this.state.l2RpcProvider =
       typeof this.options.l2RpcProvider === 'string'
-        ? new JsonRpcProvider({
-            url: this.options.l2RpcProvider,
-            user: this.options.l2RpcProviderUser,
-            password: this.options.l2RpcProviderPassword,
-            headers: { 'User-Agent': 'data-transport-layer' },
-          })
+        ? new JsonRpcProvider(this.options.l2RpcProvider)
         : this.options.l2RpcProvider
 
     this._initializeApp()

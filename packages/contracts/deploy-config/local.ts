@@ -1,7 +1,10 @@
-const config = {
+import { DeployConfig } from '../src/deploy-config'
+
+const config: DeployConfig = {
+  network: 'local',
   l1BlockTimeSeconds: 15,
   l2BlockGasLimit: 15_000_000,
-  l2ChainId: 17,
+  l2ChainId: 987,
   ctcL2GasDiscountDivisor: 32,
   ctcEnqueueGasCost: 60_000,
   sccFaultProofWindowSeconds: 0,
